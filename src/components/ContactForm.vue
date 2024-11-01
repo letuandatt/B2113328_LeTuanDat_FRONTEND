@@ -11,7 +11,7 @@
         </div>
 
         <div class="form-group">
-            <label for="email">Tên</label>
+            <label for="email">Email</label>
             <Field
                 name="email"
                 type="email"
@@ -21,7 +21,7 @@
         </div>
 
         <div class="form-group">
-            <label for="address">Tên</label>
+            <label for="address">Địa chỉ</label>
             <Field
                 name="address"
                 type="text"
@@ -40,30 +40,20 @@
             <ErrorMessage name="phone" class="error-feedback" />
         </div>
 
-        <div class="form-group">
-            <label for="name">Tên</label>
-            <Field
-                name="name"
-                type="text"
-                class="form-control"
-                v-model="contactLocal.name" />
-            <ErrorMessage name="name" class="error-feedback" />
-        </div>
-
         <div class="form-group form-check">
             <input 
                 name="favorite"
                 type="checkbox"
                 class="form-check-input"
                 v-model="contactLocal.favorite" />
-            <label for="favorite" class="form-check-label">
+            <label for="favorite">
                 <strong>Liên hệ yêu thích</strong>
             </label>
         </div>
 
         <div class="form-group">
-            <button class="btn btn-primary" @click="submitContact">
-                <i class="fa-solid fa-floppy-disk"></i>&nbsp;Lưu
+            <button class="btn btn-primary">
+                Lưu
             </button>
             <button
                 v-if="contactLocal._id"
@@ -77,8 +67,8 @@
 </template>
 
 <script>
-import * as yup from "yup"
-import { Form, Field, ErrorMessage } from "vee-validate"
+import * as yup from "yup";
+import { Form, Field, ErrorMessage } from "vee-validate";
 
 export default{
     components: {
@@ -86,10 +76,10 @@ export default{
         Field,
         ErrorMessage,
     },
+    emits: ["submit:contact", "delete:contact"],
     props: {
         contact: { type: Object, required: true },
     },
-    emits: ["submit:contact", "delete:contact"],
 
     data(){
         const contactFormSchema = yup.object().shape({
@@ -109,24 +99,24 @@ export default{
                     /((09|03|07|08|05)+([0-9]{8})\b)/g,
                     "Số điện thoại không hợp lệ."
                 ),
-        })
+        });
         return {
             // Không muốn hiệu chỉnh props, nên tạo biến cục bộ
             // contactLocal để liên kết với các input trên form
             contactLocal: this.contact,
             contactFormSchema,
-        }
+        };
     },
 
     methods: {
         submitContact() {
-            this.$emit("submit:contact", this.contact)
+            this.$emit("submit:contact", this.contactLocal);
         },
         deleteContact() {
-            this.$emit("delete:contact", this.contactLocal.id)
-        }
-    }
-}
+            this.$emit("delete:contact", this.contactLocal._id);
+        },
+    },
+};
 </script>
 
 <style scoped>

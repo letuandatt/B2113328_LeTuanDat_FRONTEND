@@ -8,8 +8,8 @@
 </template>
 
 <script>
-import ContactForm from "@/components/ContactForm.vue"
-import ContactService from "@/services/contact.service"
+import ContactForm from "@/components/ContactForm.vue";
+import ContactService from "@/services/contact.service";
 
 export default {
     components: {
@@ -17,21 +17,22 @@ export default {
     },
 
     props: {
-        id: { type: String, required: true}
+        id: { type: String, required: true},
     },
 
     data() {
         return {
             contact: null,
             message: "",
-        }
+        };
     },
 
     methods: {
         async getContact(id) {
             try {
-                this.contact = await ContactService.get(id)
+                this.contact = await ContactService.get(id);
             } catch (error) {
+                console.log(error);
                 // Chuyển sang trang NotFound đồng thời giữ cho URL không đổi
                 this.$router.push({
                     name: "notfound",
@@ -39,33 +40,36 @@ export default {
                         pathMatch: this.$route.path.split("/").slice(1),
                     },
                     query: this.$route.query,
-                    hash: this.$route.hash
-                })
-            }
+                    hash: this.$route.hash,
+                });
+            };
         },
 
         async updateContact(data) {
             try {
-                await ContactService.update(this.contact._id, data)
-                this.message = "Liên hệ được cập nhật thành công."
+                await ContactService.update(this.contact._id, data);
+                alert("Liên hệ được cập nhật thành công");
+                this.$router.push({ name: "contactbook" });
             } catch (error) {
-                console.log(error)
-            }
+                console.log(error);
+            };
         },
+
         async deleteContact() {
             if (confirm("Bạn có muốn xóa liên hệ này?")) {
                 try {
-                    await ContactService.delete(this.contact._id)
+                    await ContactService.delete(this.contact._id);
+                    this.$router.push({ name: "contactbook" });
                 } catch (error) {
-                    console.log(error)
-                }
-            }
-        }
+                    console.log(error);
+                };
+            };
+        },
     },
 
     created() {
-        this.getContact(this.id)
-        this.message = ""
-    }
+        this.getContact(this.id);
+        this.message = "";
+    },
 }
 </script>
